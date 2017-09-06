@@ -84,8 +84,30 @@ J = ((1/m)*sum(sum(-yVec .* log(aa) - (1 - yVec) .* log(1 - aa)))) + Reg;
 
 
 % -------------------------------------------------------------
-
+% Gradients
 % =========================================================================
+
+D1 = zeros(size(Theta1));
+D2 = zeros(size(Theta2));
+for t = 1 : m
+  a1  = X(t,:)';      
+  a2 = a(t,:)';    
+  a3 = aa(t,:)'; 
+  d3 = (a3 - yVec(t,:)');
+  
+  z2 = [1; Theta1*a1];
+  d2 = Theta2'*d3.*sigmoidGradient(z2);
+  
+  D1 = D1 + d2(2:end)*(a1)';
+  D2 = D2 + d3*(a2)';
+  
+end 
+
+DReg1 =  (lambda/m)*thetaShift1;
+DReg2 =  (lambda/m)*thetaShift2;
+
+Theta1_grad = ((1/m)*(D1)) + DReg1;
+Theta2_grad = ((1/m)*(D2)) + DReg2;
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
