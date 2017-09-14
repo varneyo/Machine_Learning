@@ -8,8 +8,11 @@ function [C, sigma] = dataset3Params(X, y, Xval, yval)
 %
 
 % You need to return the following variables correctly.
-CTmp = [0.01;0.03;0.1;0.3;1;3;10;30];
-sigmaTmp = [0.01;0.03;0.1;0.3;1;3;10;30];
+C = 1;
+sigma = 0.03;
+
+;
+;
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Fill in this function to return the optimal C and sigma
@@ -23,25 +26,25 @@ sigmaTmp = [0.01;0.03;0.1;0.3;1;3;10;30];
 %        mean(double(predictions ~= yval))
 %
 
-result = 1.01;
-for i=1 :size(CTmp,1)
-   for j = 1 : size(sigmaTmp,1)
-           model = svmTrain(Xval, yval, CTmp(i), @(x1, x2) gaussianKernel(x1, x2, sigmaTmp(j)));
+result = 10000;
+for CTmp = [0.01,0.03,0.1,0.3,1,3,10,30]
+   for sigmaTmp = [0.01,0.03,0.1,0.3,1,3,10,30]
+      model = svmTrain(X, y, CTmp, @(x1, x2) gaussianKernel(x1, x2, sigmaTmp));
       predictions = svmPredict(model, Xval);
       
-      tmp = mean(double(predictions ~= yval));
-      if tmp >0.03
-      if tmp < result       
-          result = tmp;
-          resultC= CTmp(i,1) ;
-          resultSigma = sigmaTmp(j,1);
+      tmpResult = mean(double(predictions ~= yval));
+     
+      if tmpResult < result       
+          result = tmpResult;
+          resultC= CTmp ;
+          resultSigma = sigmaTmp;
       end;
-      end;
-   end; 
+      end;    
 end;
    
-      C = resultC;
+     C = resultC;
       sigma =resultSigma;
+
 
 
 % =========================================================================
