@@ -35,14 +35,14 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-
+theta
 % Cost Function	
 pred = sigmoid(X*theta);
 % Other way of doing the cost function below: J =  (1/m)*sum((-y.*log(pred)) - ((1-y).*log(1-pred)));
 
 thetaShift = [0;theta(2:length(theta))];
 J =  ( (1/m) * ((-y'*log(pred)) - ((1-y)'*log(1-pred))))  + (lambda/(2*m))*sum((thetaShift).^2);
-
+%J =  (1/m)*sum((-y.*log(pred)) - ((1-y).*log(1-pred)))+ (lambda/(2*m))*sum((thetaShift).^2);
 grad =  (1/m)*((X'*(pred - y))+(lambda*thetaShift));
 
 

@@ -24,7 +24,10 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 % Setup some useful variables
 m = size(X, 1);
-         
+
+% Add ones to the X data matrix
+X = [ones(m, 1) X];
+
 % You need to return the following variables correctly 
 J = 0;
 Theta1_grad = zeros(size(Theta1));
@@ -61,28 +64,54 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+a = [ones(m,1) zeros(m,hidden_layer_size)];
+aa = [zeros(m,num_labels)];
+yVec = repmat([1:num_labels], m, 1) == repmat(y, 1, num_labels);
 
+for t =1 : num_labels
+    for i = 1 : hidden_layer_size
+        a(:,i+1) = sigmoid(X*Theta1(i,:)');    
+    end 
+    aa(:,t) = sigmoid (a*Theta2(t,:)');  
+end 
 
+thetaShift1 = [zeros(size(Theta1,1),1) Theta1(:,2:end) ];
+thetaShift2 = [zeros(size(Theta2,1),1) Theta2(:,2:end) ];
 
+Reg = (lambda/(2*m))* ((sum(sum((thetaShift1).^2)))  + (sum(sum((thetaShift2).^2))));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+J = ((1/m)*sum(sum(-yVec .* log(aa) - (1 - yVec) .* log(1 - aa)))) + Reg;
 
 
 % -------------------------------------------------------------
-
+% Gradients
 % =========================================================================
+
+D1 = zeros(size(Theta1));
+D2 = zeros(size(Theta2));
+for t = 1 : 1
+  a1  = X(t,:)';      
+  a2 = a(t,:)';    
+  a3 = aa(t,:)';
+  size(aa)
+  a3
+  yVec(t,:)'
+  d3 = (a3 - yVec(t,:)');
+  d3
+  z2 = [1; Theta1*a1];
+  d2 = Theta2'*d3.*sigmoidGradient(z2);
+  
+  D1 = D1 + d2(2:end)*(a1)';
+  D2 = D2 + d3*(a2)';
+  size(D1)
+  size(D2)
+end 
+
+DReg1 =  (lambda/m)*thetaShift1;
+DReg2 =  (lambda/m)*thetaShift2;
+
+Theta1_grad = ((1/m)*(D1)) + DReg1;
+Theta2_grad = ((1/m)*(D2)) + DReg2;
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
