@@ -54,7 +54,7 @@ pause
 fprintf('Visualizing Gaussian fit.\n\n');
 
 %  Estimate my and sigma2
-[mu sigma2] = estimateGaussian(X);
+[mu sigma2] = estimateGaussian(X)
 
 %  Returns the density of the multivariate normal at each data point (row) 
 %  of X

@@ -31,9 +31,9 @@ for t = 1 : num_labels
 	a(:, c+1) = (sigmoid(X*Theta1(c,:)'));
 	end	
 	
-	aa(:,t) = sigmoid( a*Theta2(t,:)'); 
+	aa(:,t) = sigmoid( a*Theta2(t,:)');
 end
-[max_values indices] = max(aa,[],2);
+[max_values indices] = max(aa,[],2)
 p = indices;
 
 % =========================================================================
